@@ -7,13 +7,28 @@ function getQueryParam(name) {
   return params.get(name);
 }
 
+function isAllowedApiBase(value) {
+  try {
+    const url = new URL(value, window.location.origin);
+    const isLocal = ['localhost', '127.0.0.1'].includes(url.hostname);
+    const isSameOrigin = url.origin === window.location.origin;
+    return (isSameOrigin || isLocal) && url.pathname.endsWith('/api');
+  } catch {
+    return false;
+  }
+}
+
 function getApiBase() {
   const explicitBase = getQueryParam('api_base');
-  if (explicitBase) {
+  if (explicitBase && isAllowedApiBase(explicitBase)) {
     return String(explicitBase).replace(/\/$/, '');
   }
 
-  if (typeof window !== 'undefined' && window.__DEALS99_API_BASE__) {
+  if (
+    typeof window !== 'undefined' &&
+    window.__DEALS99_API_BASE__ &&
+    isAllowedApiBase(window.__DEALS99_API_BASE__)
+  ) {
     return String(window.__DEALS99_API_BASE__).replace(/\/$/, '');
   }
 

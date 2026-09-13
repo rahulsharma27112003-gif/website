@@ -758,7 +758,7 @@
   <script>
     // Set the API base for the admin frontend.
     // If the frontend is loaded from a file or different origin, specify the backend explicitly.
-    window.__DEALS99_API_BASE__ = window.__DEALS99_API_BASE__ || 'http://127.0.0.1:8000/api';
+    window.__DEALS99_API_BASE__ = window.__DEALS99_API_BASE__ || `${window.location.origin}/api`;
   </script>
   <script type="module">
     import { initAdminPanel } from './admin.js';
