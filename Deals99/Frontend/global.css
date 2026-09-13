@@ -1055,9 +1055,7 @@ body > .container.site-main {
 }
 
 .checkout-summary-card {
-  position: sticky;
-  top: 100px;
-  align-self: flex-start;
+  position: static;
   width: 100%;
 }
 
