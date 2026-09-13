@@ -1187,6 +1187,12 @@ class ProductManager {
         if (productData) {
           this.showQuickView(productData);
         }
+        return;
+      }
+
+      const card = e.target.closest('.product-card[data-product-id]');
+      if (card && !e.target.closest('button, a, input, select, textarea')) {
+        window.open(`product-detail.html?id=${encodeURIComponent(card.dataset.productId)}`, '_blank', 'noopener');
       }
     });
   }
@@ -1199,13 +1205,9 @@ class ProductManager {
   }
 
   showQuickView(product) {
-    alert(
-      'Product: ' + product.name + '\n' +
-      'Price: Rs.' + (product.price || product.discounted || product.mrp) + '\n' +
-      'Description: ' + (product.desc || product.description || '') + '\n' +
-      (product.mrp && product.mrp > (product.price || product.discounted) ? 'MRP: Rs.' + product.mrp + '\n' : '') +
-      (typeof product.stock === 'number' ? 'Stock: ' + product.stock : '')
-    );
+    if (product?.id) {
+      window.open(`product-detail.html?id=${encodeURIComponent(product.id)}`, '_blank', 'noopener');
+    }
   }
 
   searchProducts(query) {
@@ -1274,7 +1276,7 @@ class ProductManager {
       ? `<div class="product-original">₹${Number(product.original).toLocaleString('en-IN')}</div>`
       : '';
     return `
-      <div class="product-card">
+      <div class="product-card" data-product-id="${product.id}" role="link" tabindex="0" aria-label="View ${product.name} details">
         <div class="product-badge">${product.badge || 'Deal'}</div>
         <img src="${product.img}" alt="${product.name}" class="product-img" loading="lazy">
         <div class="product-name">${product.name}</div>
