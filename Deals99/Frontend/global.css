@@ -760,6 +760,15 @@ body > .container.site-main {
   }
 }
 
+@media (max-width: 991.98px) {
+  .checkout-summary-card,
+  .cart-summary-card,
+  .sticky-top {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
 @media (max-width: 576px) {
   .btn {
     padding: var(--spacing-sm) var(--spacing-md);
