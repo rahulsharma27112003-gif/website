@@ -951,11 +951,10 @@
       }
     }
 
-    function logout(type) {
+    async function logout(type) {
       try {
-        if (type === 'admin' || (localStorage.getItem('access_token') && (JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('user_data') || '{}').is_staff || JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('user_data') || '{}').is_superuser))) {
-          fetch('http://127.0.0.1:8000/api/auth/logout/', { method: 'POST', credentials: 'include' }).catch(() => {});
-        }
+        const { logoutUser } = await import('./api.js');
+        logoutUser();
       } finally {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('isAdminLoggedIn');

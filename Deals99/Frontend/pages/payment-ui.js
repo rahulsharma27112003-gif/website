@@ -138,12 +138,12 @@ export async function completePendingPayment(pending, order) {
   const config = await getPaymentConfig();
 
   if (pending.payment_method === 'stripe' && pending.client_secret && config.stripe_publishable_key) {
-    await initStripeCardElement(config.stripe_publishable_key);
     showPaymentModal({
       title: 'Pay with card (Stripe)',
       bodyHtml: '<p class="small text-muted mb-3">Enter card details to complete your order.</p><div id="stripe-card-element" class="form-control py-3"></div>',
       confirmLabel: 'Pay now',
       onConfirm: async () => {
+        await initStripeCardElement(config.stripe_publishable_key);
         await confirmStripeCardPayment(pending.client_secret);
         sessionStorage.removeItem('deals99_pending_payment');
         window.NotificationManager?.show('Payment completed successfully', 'success');
