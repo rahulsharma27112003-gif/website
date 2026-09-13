@@ -1192,7 +1192,10 @@ class ProductManager {
 
       const card = e.target.closest('.product-card[data-product-id]');
       if (card && !e.target.closest('button, a, input, select, textarea')) {
-        window.open(`product-detail.html?id=${encodeURIComponent(card.dataset.productId)}`, '_blank', 'noopener');
+        const query = card.dataset.productId
+          ? `id=${encodeURIComponent(card.dataset.productId)}`
+          : `name=${encodeURIComponent(card.dataset.productName || '')}`;
+        window.open(`product-detail.html?${query}`, '_blank', 'noopener');
       }
     });
   }
@@ -1205,8 +1208,11 @@ class ProductManager {
   }
 
   showQuickView(product) {
-    if (product?.id) {
-      window.open(`product-detail.html?id=${encodeURIComponent(product.id)}`, '_blank', 'noopener');
+    if (product?.id || product?.name) {
+      const query = product.id
+        ? `id=${encodeURIComponent(product.id)}`
+        : `name=${encodeURIComponent(product.name)}`;
+      window.open(`product-detail.html?${query}`, '_blank', 'noopener');
     }
   }
 
@@ -1265,6 +1271,9 @@ class ProductManager {
   }
 
   static renderProductCard(product) {
+    const detailQuery = product.id
+      ? `id=${encodeURIComponent(product.id)}`
+      : `name=${encodeURIComponent(product.name || '')}`;
     const outOfStock = typeof product.stock === 'number' && product.stock <= 0;
     const stockHtml =
       typeof product.stock === 'number'
@@ -1276,9 +1285,9 @@ class ProductManager {
       ? `<div class="product-original">₹${Number(product.original).toLocaleString('en-IN')}</div>`
       : '';
     return `
-      <div class="product-card" data-product-id="${product.id}" role="link" tabindex="0" aria-label="View ${product.name} details">
+      <div class="product-card" data-product-id="${product.id || ''}" data-product-name="${product.name || ''}" role="link" tabindex="0" aria-label="View ${product.name} details">
         <div class="product-badge">${product.badge || 'Deal'}</div>
-        <a class="product-detail-link" href="product-detail.html?id=${encodeURIComponent(product.id)}" target="_blank" rel="noopener">
+        <a class="product-detail-link" href="product-detail.html?${detailQuery}" target="_blank" rel="noopener">
           <img src="${product.img}" alt="${product.name}" class="product-img" loading="lazy">
           <div class="product-name">${product.name}</div>
         </a>

@@ -76,8 +76,13 @@ self.addEventListener('fetch', (event) => {
       caches.open(CACHE_VERSION).then(cache => cache.put(request, resClone));
       return res;
     })).catch(() => {
-      // Fallback for navigation requests — serve index.html
-      if (request.mode === 'navigate') return caches.match('/index.html');
+      // Do not silently replace a failed page navigation with the homepage.
+      if (request.mode === 'navigate') {
+        return new Response('This page is unavailable offline.', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        });
+      }
       return new Response('', { status: 404 });
     })
   );

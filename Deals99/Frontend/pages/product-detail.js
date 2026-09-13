@@ -66,22 +66,29 @@ function renderRecommendations(products, currentId) {
 }
 
 async function init() {
-  const id = new URLSearchParams(window.location.search).get('id');
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const name = params.get('name');
   const status = document.getElementById('productDetailStatus');
   const detail = document.getElementById('productDetail');
-  if (!id) {
+  if (!id && !name) {
     status.innerHTML = '<p class="text-danger">Product not found.</p><a class="btn btn-primary" href="products.html">Back to products</a>';
     return;
   }
 
   try {
-    const [product, products] = await Promise.all([fetchProduct(id), fetchProducts({ page_size: 8 })]);
+    const products = await fetchProducts({ page_size: 50 });
+    let product = id ? await fetchProduct(id) : products?.find((row) => row.name?.toLowerCase() === name.toLowerCase());
+    if (!product && name && window.ProductManager?.getProductByName) {
+      product = window.ProductManager.getProductByName(name);
+    }
+    if (!product) throw new Error('Product was not found');
     const item = mapProduct(product);
     document.title = `${item.name} | Deals99`;
     detail.innerHTML = renderProduct(item);
     detail.hidden = false;
     status.hidden = true;
-    renderRecommendations(products, id);
+    renderRecommendations(products, item.id);
 
     detail.querySelectorAll('.product-thumbnail').forEach((thumbnail) => {
       thumbnail.addEventListener('click', () => {
