@@ -1278,8 +1278,10 @@ class ProductManager {
     return `
       <div class="product-card" data-product-id="${product.id}" role="link" tabindex="0" aria-label="View ${product.name} details">
         <div class="product-badge">${product.badge || 'Deal'}</div>
-        <img src="${product.img}" alt="${product.name}" class="product-img" loading="lazy">
-        <div class="product-name">${product.name}</div>
+        <a class="product-detail-link" href="product-detail.html?id=${encodeURIComponent(product.id)}" target="_blank" rel="noopener">
+          <img src="${product.img}" alt="${product.name}" class="product-img" loading="lazy">
+          <div class="product-name">${product.name}</div>
+        </a>
         <div class="product-desc">${product.desc || product.description || ''}</div>
         <div class="product-price">₹${Number(product.price).toLocaleString('en-IN')}</div>
         ${originalHtml}
